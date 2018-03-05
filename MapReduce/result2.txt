@@ -1,0 +1,8 @@
+result2.txt
+como : 1
+dias : 1
+pene : 3
+buenos : 1
+hola : 1
+estas : 1
+nepe : 1
