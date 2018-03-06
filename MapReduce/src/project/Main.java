@@ -15,7 +15,7 @@ public class Main {
 	public static void main(String[] args) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		
-		System.out.println(args[1]);
+		//System.out.println("Hello MONO" + args[1]);
 		long startTime = System.nanoTime();
 		
 		//Load of the running parameters for the file1
@@ -32,7 +32,6 @@ public class Main {
 			sp.Split(lines,1,threads);
 		}
 		
-		
 		//Load of the running parameters for the file2
 		if (isFileParameter(args)) {
 			file = getFile(args);
@@ -42,13 +41,11 @@ public class Main {
 		}
 		
 		//Executing the word counter for both files		
-		
-		
-		
+				
 		long finishTime = System.nanoTime();
 		
 		System.out.print("The elapsed time : ");
-		System.out.print((finishTime - startTime)/1e9 + " s");
+		System.out.println((finishTime - startTime)/1e9 + " s");
 	}
 	
 	//Reads a file, filters its content and returns it as an array
@@ -92,27 +89,26 @@ public class Main {
 		
 		for (int i = 1; i <= args.length; i++) {
 			if(args[i-1].length() > 0) {
-				str= args[i-1].split("[.]");
-				if(str[1].equals("txt")) {
+				str= args[i-1].split("[.|/]");
+				if(str[str.length-1].equals("txt")) {
 					return true;
 				}			
 			}		
 		} return false;
 	}	
 	//Gets the file name from the parameters passed by the user
-	private static File getFile(String[] args) {		
+	private static File getFile(String[] args) {
 		
 		String[] names = new String[args.length];
 		String name;
 		for (int i = 0; i <args.length; i++) {
 			if(args[i].length() > 0) {
-				names= args[i].split("[.]");
-				if(names[1].equals("txt")) {
+				names= args[i].split("[.|/]");
+				if(names[names.length-1].equals("txt")) {
 					args[i] = "";
-					return new File(names[0] + "." + names[1]);
+					return new File(names[0] + "." + names[names.length-1]);
 				}
 			}
-					
 		}		
 		throw new NullPointerException("File not found");
 	}
