@@ -17,24 +17,21 @@ public class Splitter {
 	
 	final static int THREADS = 10;
 	
-	public void Split(List<String> list, int num, boolean thread) throws InterruptedException {	
-				
-		
-		Map m = new Map();
+	public void Split(List<String> list, int num, boolean thread, Map m) throws InterruptedException {		
 		
 		if(thread) {
 			parallelRead(THREADS,list,m);
 		} else {
 			 seqRead(list,m);
 		}
-		
+		/*
 		Shuffler sh= new Shuffler();
 		HashMap<String,List<Integer>> suffledDict = sh.shuffle(Map.getDictList());
 		Reducer red = new Reducer();
 		HashMap<String,Integer> finalDict = red.reduce(suffledDict);
 		
 		
-		sortedPrint(finalDict,num);
+		sortedPrint(finalDict,num);*/
 	}
 	//Creates the number of Threads for the multithreaded read and starts them
 	private void parallelRead(final int threads, List<String> list, Map m) throws InterruptedException {	

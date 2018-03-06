@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -15,7 +16,7 @@ public class Main {
 	public static void main(String[] args) throws IOException, InterruptedException {
 		// TODO Auto-generated method stub
 		
-		//System.out.println("Hello MONO" + args[1]);
+		
 		long startTime = System.nanoTime();
 		
 		//Load of the running parameters for the file1
@@ -23,21 +24,33 @@ public class Main {
 		boolean threads = isThread(args);
 		File file;
 		
-		//Checks if there's a file parameter on args
+		//Execution of the MapReduce algorithm on the designated file
 		if (isFileParameter(args)) {
 			file = getFile(args);
 			System.out.println("file is : " + file);
 			List<String> lines = readFile(file);
 			Splitter sp = new Splitter();
-			sp.Split(lines,1,threads);
+			Map m = new Map();
+			Shuffler shuf = new Shuffler();
+			sp.Split(lines,1,threads,m);
+			HashMap<String,List<Integer>> suffledDict = shuf.shuffle(m.getDictList());
+			Reducer red = new Reducer();
+			HashMap<String,Integer> finalDict = red.reduce(suffledDict);
+			sp.sortedPrint(finalDict,1);
 		}
 		
-		//Load of the running parameters for the file2
+		//Execution of the MapReduce algorithm on the designated file
 		if (isFileParameter(args)) {
 			file = getFile(args);
 			List<String> lines2 = readFile(file);
 			Splitter sp1 = new Splitter();
-			sp1.Split(lines2,2,threads);
+			Map ma = new Map();
+			Shuffler sh = new Shuffler();
+			sp1.Split(lines2,2,threads,ma);			
+			HashMap<String,List<Integer>> suffledDict = sh.shuffle(ma.getDictList());
+			Reducer red = new Reducer();
+			HashMap<String,Integer> finalDict = red.reduce(suffledDict);
+			sp1.sortedPrint(finalDict,2);
 		}
 		
 		//Executing the word counter for both files		
@@ -106,7 +119,7 @@ public class Main {
 				names= args[i].split("[.|/]");
 				if(names[names.length-1].equals("txt")) {
 					args[i] = "";
-					return new File(names[0] + "." + names[names.length-1]);
+					return new File(names[names.length-2] + "." + names[names.length-1]);
 				}
 			}
 		}		

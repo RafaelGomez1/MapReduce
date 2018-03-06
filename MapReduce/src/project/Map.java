@@ -1,17 +1,11 @@
 package project;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 
 public class Map extends Thread{
@@ -33,7 +27,7 @@ public class Map extends Thread{
 	//Creates the Pair [key,value] for each word of the line
 	synchronized void dictCreator (String[] word) {
 		
-		for (String s : word) {			
+		for (String s : word) {
 			dictionary.put(s, 1);
 			list.add(dictionary);
 			//showDictList();
@@ -52,7 +46,7 @@ public class Map extends Thread{
 	        String value = String.valueOf(dictionary.get(key));
 	        System.out.print("key=" + key + ", value=" + value);
 			
-		}		
+		}
 	}
 	
 	public static HashMap<String,Integer> getDictionary() {
