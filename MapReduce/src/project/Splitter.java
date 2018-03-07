@@ -20,10 +20,10 @@ public class Splitter {
 	public void Split(List<String> list, int num, boolean thread, Map m) throws InterruptedException {		
 		
 		if(thread) {
-			parallelRead(THREADS,list,m);
+			parallelRead(THREADS,list.size(),m,list);
 		} else {
 			 seqRead(list,m);
-		}
+		}  
 		/*
 		Shuffler sh= new Shuffler();
 		HashMap<String,List<Integer>> suffledDict = sh.shuffle(Map.getDictList());
@@ -34,14 +34,15 @@ public class Splitter {
 		sortedPrint(finalDict,num);*/
 	}
 	//Creates the number of Threads for the multithreaded read and starts them
-	private void parallelRead(final int threads, List<String> list, Map m) throws InterruptedException {	
+	private void parallelRead(final int threads, int listSize, Map m, List<String> list) throws InterruptedException {	
 		
 		long init_time;
 		long finish_time;
 		long jointTime = 0;
 		List<Thread> thr = new ArrayList<Thread>();		
 		for (int i = 1; i<=threads; i++) {
-			thr.add(new Thread(read(i,list, m),""+i));			
+			//thr.add(new Thread(read(i,listSize, m,list),""+i));	
+			thr.add(new Thread(read(i,listSize, m,list),""+i));			
 			thr.get(i-1).start();
 			init_time = System.nanoTime();
 			thr.get(i-1).join();
@@ -51,19 +52,21 @@ public class Splitter {
 		System.out.println(" The time spent joining is : " + jointTime/1e9);
 	}
 	
-	private Runnable read(final int num,List<String> list, Map m) {
+	private Runnable read(final int num,int listSize, Map m, List<String> list) {
 		return new Runnable() {
 			@Override
 			public void run() {
 				//Calculates the number of lines assigned to every thread
-				int work = list.size()/THREADS;
+				//int work = listSize/THREADS;
+				int work = listSize/THREADS;
 				int specialWork = work;
 				
 				//Calculates the number of lines the last thread has to do
 				if( num == THREADS ) {
-					specialWork = list.size() - (work * (THREADS - 1));					
+					//specialWork = list.size() - (work * (THREADS - 1));
+					specialWork = listSize - (work * (THREADS - 1));					
 				}				
-				List<String> li = list;			
+				List<String> li = list;		
 				int x = (num - 1) * work;
 				for(int i = (num-1) * work; i < (x + specialWork) ; i++) {										
 					m.Mapp(li.get(i));
@@ -72,7 +75,11 @@ public class Splitter {
 		};
 		
 	}
-	
+	/*
+	private List<String> workPerThread( List<String> list,) {
+		
+	}
+	*/
 	//Reads the words of a file without multithreading
 	private void seqRead(List<String> list, Map m) {
 		
